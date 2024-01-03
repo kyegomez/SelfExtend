@@ -27,6 +27,17 @@ def apply_pos_emcode(tensor, pos, dim):
 
 
 class SelfExtend(nn.Module):
+    """
+    SelfExtend module performs self-attention on input sequences using
+    both normal self-attention and grouped self-attention.
+
+    Args:
+        dim (int): The dimension of the input sequences.
+        g_size (int): The size of each group for grouped self-attention.
+        w_size (int): The window size for grouped self-attention.
+        qk_norm (bool, optional): Whether to apply layer normalization to
+            query and key vectors. Defaults to False.
+    """
     def __init__(
         self,
         dim: int,
@@ -43,6 +54,18 @@ class SelfExtend(nn.Module):
             self.norm = nn.LayerNorm(dim)
 
     def forward(self, q, k, v, pos):
+        """
+        Forward pass of the SelfExtend module.
+
+        Args:
+            q (torch.Tensor): The query tensor of shape (batch_size, seq_len, dim).
+            k (torch.Tensor): The key tensor of shape (batch_size, seq_len, dim).
+            v (torch.Tensor): The value tensor of shape (batch_size, seq_len, dim).
+            pos (torch.Tensor): The position tensor of shape (batch_size, seq_len).
+
+        Returns:
+            torch.Tensor: The output tensor of shape (batch_size, seq_len, dim).
+        """
         seq_len = q.size(1)
 
         # Normal self-attention for neighbor tokens
@@ -79,18 +102,3 @@ class SelfExtend(nn.Module):
         output = torch.matmul(attn_weights, v)
         return output
 
-
-# Example usage
-dim = 512  # Dimension of model
-g_size = 2  # Group size
-w_size = 4  # Window size for neighbor tokens
-self_extend = SelfExtend(dim, g_size, w_size)
-
-# Example tensors for q, k, v, and pos
-q = torch.randn(1, 10, dim)
-k = torch.randn(1, 10, dim)
-v = torch.randn(1, 10, dim)
-pos = torch.arange(0, 10).unsqueeze(0)  # Example positional indices
-
-output = self_extend(q, k, v, pos)
-print(output)
