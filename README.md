@@ -5,7 +5,7 @@ Implementation of SelfExtendAttn from the paper "LLM Maybe LongLM: Self-Extend L
 
 
 # Install
-`pip install SelfExtendAttn`
+`pip install selfextend`
 
 
 ## Usage
@@ -28,8 +28,6 @@ pos = torch.arange(0, 10).unsqueeze(0)  # Example positional indices
 output = self_extend(q, k, v, pos)
 print(output)
 ```
-
-Certainly! A technical architecture analysis of the `SelfExtendAttn` attention mechanism for a README.md file would involve detailing the purpose, design, and usage of the module. Here's a suggested layout and content:
 
 ---
 
