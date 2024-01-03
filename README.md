@@ -10,7 +10,23 @@ Implementation of SelfExtendAttn from the paper "LLM Maybe LongLM: Self-Extend L
 
 ## Usage
 ```python
+import torch
+from se_attn import SelfExtendAttn
 
+# Example usage
+dim = 512  # Dimension of model
+g_size = 2  # Group size
+w_size = 4  # Window size for neighbor tokens
+self_extend = SelfExtendAttn(dim, g_size, w_size, qk_norm=True)
+
+# Example tensors for q, k, v, and pos
+q = torch.randn(1, 10, dim)
+k = torch.randn(1, 10, dim)
+v = torch.randn(1, 10, dim)
+pos = torch.arange(0, 10).unsqueeze(0)  # Example positional indices
+
+output = self_extend(q, k, v, pos)
+print(output)
 ```
 
 Certainly! A technical architecture analysis of the `SelfExtendAttn` attention mechanism for a README.md file would involve detailing the purpose, design, and usage of the module. Here's a suggested layout and content:
