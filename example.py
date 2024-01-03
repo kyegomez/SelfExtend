@@ -1,11 +1,11 @@
 import torch
-from se_attn import SelfExtend
+from se_attn import SelfExtendAttn
 
 # Example usage
 dim = 512  # Dimension of model
 g_size = 2  # Group size
 w_size = 4  # Window size for neighbor tokens
-self_extend = SelfExtend(dim, g_size, w_size)
+self_extend = SelfExtendAttn(dim, g_size, w_size, qk_norm=True)
 
 # Example tensors for q, k, v, and pos
 q = torch.randn(1, 10, dim)

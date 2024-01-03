@@ -1,7 +1,8 @@
 import math
 import torch
 import torch.nn.functional as F
-from torch import nn
+from torch import nn, Tensor
+from zeta.nn import YarnEmbedding
 
 
 def causal_mask(size):
@@ -26,9 +27,9 @@ def apply_pos_emcode(tensor, pos, dim):
     return tensor + pe[:, pos]
 
 
-class SelfExtend(nn.Module):
+class SelfExtendAttn(nn.Module):
     """
-    SelfExtend module performs self-attention on input sequences using
+    SelfExtendAttn module performs self-attention on input sequences using
     both normal self-attention and grouped self-attention.
 
     Args:
@@ -37,25 +38,58 @@ class SelfExtend(nn.Module):
         w_size (int): The window size for grouped self-attention.
         qk_norm (bool, optional): Whether to apply layer normalization to
             query and key vectors. Defaults to False.
+
+    Example:
+    import torch
+    from se_attn import SelfExtendAttn
+
+    # Example usage
+    dim = 512  # Dimension of model
+    g_size = 2  # Group size
+    w_size = 4  # Window size for neighbor tokens
+    self_extend = SelfExtendAttn(dim, g_size, w_size, qk_norm=True)
+
+    # Example tensors for q, k, v, and pos
+    q = torch.randn(1, 10, dim)
+    k = torch.randn(1, 10, dim)
+    v = torch.randn(1, 10, dim)
+    pos = torch.arange(0, 10).unsqueeze(0)  # Example positional indices
+
+    output = self_extend(q, k, v, pos)
+    print(output)
+
     """
+
     def __init__(
         self,
         dim: int,
         g_size: int,
         w_size: int,
         qk_norm: bool = False,
+        yarn_embeddings: bool = False,
+        *args,
+        **kwargs,
     ):
-        super(SelfExtend, self).__init__()
+        super(SelfExtendAttn, self).__init__()
         self.dim = dim
         self.g_size = g_size
         self.w_size = w_size
+        self.qk_norm = qk_norm
+        self.yarn_embeddings = yarn_embeddings
 
+        # Layer normalization
         if qk_norm:
             self.norm = nn.LayerNorm(dim)
 
-    def forward(self, q, k, v, pos):
+        # Yarn embeddings
+        if yarn_embeddings:
+            self.yarn = YarnEmbedding(dim, *args, **kwargs)
+
+    def forward(
+        self, q: Tensor, k: Tensor, v: Tensor, pos: Tensor
+    ) -> Tensor:
         """
-        Forward pass of the SelfExtend module.
+        Forward pass of the SelfExtendAttn module.
 
         Args:
             q (torch.Tensor): The query tensor of shape (batch_size, seq_len, dim).
@@ -67,6 +101,11 @@ class SelfExtend(nn.Module):
             torch.Tensor: The output tensor of shape (batch_size, seq_len, dim).
         """
         seq_len = q.size(1)
+
+        # Apply layer normalization to query and key vectors
+        if self.qk_norm:
+            q = self.norm(q)
+            k = self.norm(k)
 
         # Normal self-attention for neighbor tokens
         ngb_q = apply_pos_emcode(q, pos, self.dim)
@@ -101,4 +140,3 @@ class SelfExtend(nn.Module):
         # Output
         output = torch.matmul(attn_weights, v)
         return output
-

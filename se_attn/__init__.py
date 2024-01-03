@@ -1,3 +1,3 @@
-from se_attn.self_extend import SelfExtend
+from se_attn.self_extend import SelfExtendAttn
 
-__all__ = ["SelfExtend"]
+__all__ = ["SelfExtendAttn"]

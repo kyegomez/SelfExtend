@@ -1,11 +1,11 @@
 [![Multi-Modality](agorabanner.png)](https://discord.gg/qUtxnK2NMf)
 
-# SelfExtend
-Implementation of SelfExtend from the paper "LLM Maybe LongLM: Self-Extend LLM Context Window Without Tuning" from Pytorch and Zeta. This implementation is based mostly on the pseudocode listed in Algorithm 1 in page 4
+# SelfExtendAttn
+Implementation of SelfExtendAttn from the paper "LLM Maybe LongLM: Self-Extend LLM Context Window Without Tuning" from Pytorch and Zeta. This implementation is based mostly on the pseudocode listed in Algorithm 1 in page 4
 
 
 # Install
-`pip install selfextend`
+`pip install SelfExtendAttn`
 
 
 ## Usage
@@ -13,7 +13,7 @@ Implementation of SelfExtend from the paper "LLM Maybe LongLM: Self-Extend LLM C
 
 ```
 
-Certainly! A technical architecture analysis of the `SelfExtend` attention mechanism for a README.md file would involve detailing the purpose, design, and usage of the module. Here's a suggested layout and content:
+Certainly! A technical architecture analysis of the `SelfExtendAttn` attention mechanism for a README.md file would involve detailing the purpose, design, and usage of the module. Here's a suggested layout and content:
 
 ---
 
@@ -27,7 +27,7 @@ Certainly! A technical architecture analysis of the `SelfExtend` attention mecha
 
 ### Attention Mechanism
 
-The `SelfExtend` module integrates these two attention strategies:
+The `SelfExtendAttn` module integrates these two attention strategies:
 
 1. **Normal Attention** is applied to tokens within a neighborhood window, maintaining precise positional information for closely related tokens.
    
@@ -43,7 +43,7 @@ Sine and cosine functions generate positional encodings, ensuring that the model
 
 ## Implementation Details
 
-- **Module Class**: `SelfExtend` is implemented as a subclass of `nn.Module` in PyTorch.
+- **Module Class**: `SelfExtendAttn` is implemented as a subclass of `nn.Module` in PyTorch.
 - **Configurability**: Key parameters such as group size and neighbor window size are configurable.
 - **Causal Masking**: Ensures that the attention mechanism respects the autoregressive property of language models.
 
