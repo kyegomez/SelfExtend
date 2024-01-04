@@ -4,7 +4,7 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
 name = "selfextend"
-version = "0.0.1"
+version = "0.0.2"
 description = "SelfExtendAttn - Pytorch"
 license = "MIT"
 authors = ["Kye Gomez <kye@apac.ai>"]
@@ -30,9 +30,6 @@ python = "^3.6"
 torch = "*"
 einops = "*"
 zetascale = "*"
-
-[tool.poetry.dev-dependencies]
-# Add development dependencies here
 
 
 [tool.poetry.group.lint.dependencies]
